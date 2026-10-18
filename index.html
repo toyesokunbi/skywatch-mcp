@@ -555,13 +555,23 @@ html:not(.hiw-title-white) .head::before{background:radial-gradient(closest-side
 
 .sw-foot .credits{margin-top:28px;font:400 11px/1.6 "Geist Mono";letter-spacing:.02em;color:rgba(255,255,255,.62);max-width:110ch}
 
-/* ---------- theme switch: square two-segment control, mono labels ---------- */
-.sw-theme{display:inline-flex;height:48px;border:1px solid rgba(255,255,255,.75);margin-right:8px}
-.sw-theme button{appearance:none;border:0;margin:0;background:transparent;color:#fff;font:500 11.5px "Geist Mono",monospace;letter-spacing:.1em;text-transform:uppercase;padding:0 12px;cursor:pointer;border-radius:0}
-.sw-theme button + button{border-left:1px solid rgba(255,255,255,.75)}
-.sw-theme button[aria-pressed="true"]{background:#fff;color:#000}
+/* ---------- theme switch: compact square two-segment icon control with a spring-eased sliding fill ---------- */
+.sw-theme{position:relative;overflow:hidden;display:inline-flex;height:30px;border:1px solid rgba(255,255,255,.6);margin-right:10px;flex:none}
+.sw-theme .knob{position:absolute;top:0;left:0;width:28px;height:100%;background:#fff;
+  transform:translateX(28px);transition:transform .52s cubic-bezier(.34,1.56,.64,1),background-color .35s ease}
+.light .sw-theme .knob{transform:translateX(0)}
+.sw-theme button{position:relative;z-index:1;appearance:none;border:0;margin:0;background:transparent;color:#fff;width:28px;height:28px;display:grid;place-items:center;padding:0;cursor:pointer;border-radius:0;transition:color .3s ease}
+.sw-theme button svg{width:14px;height:14px;display:block;transition:transform .55s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;opacity:.7}
+.sw-theme button[aria-pressed="true"]{color:#000}
+.sw-theme button[aria-pressed="true"] svg{opacity:1;transform:rotate(0) scale(1)}
+.sw-theme button[data-theme="light"][aria-pressed="false"] svg{transform:rotate(-90deg) scale(.8)}
+.sw-theme button[data-theme="dark"][aria-pressed="false"] svg{transform:rotate(40deg) scale(.8)}
 .sw-theme button:focus-visible{outline:2px solid #fff;outline-offset:2px}
-@media (max-width:640px){.sw-theme{height:40px;margin-right:4px}.sw-theme button{padding:0 8px;font-size:10px}.sw-brand .sw-logo{height:16px}}
+@media (max-width:640px){.sw-theme{margin-right:6px}.sw-brand .sw-logo{height:16px}}
+@media (prefers-reduced-motion: reduce){.sw-theme .knob,.sw-theme button,.sw-theme button svg{transition:none}}
+/* theme crossfade on the switched surfaces (only after first paint, so no flash on load) */
+.theme-anim,.theme-anim body,.theme-anim :is(.sw-nav,.sw-mq,.sw-cmp,.sw-uc,.sw-team,.sw-faqs,.sw-foot,.sw-a,.sw-card,.sw-tab,.sw-lbl,.sw-sub,.sw-gs,.sw-line,.sw-faq details){transition:background-color .45s ease,color .45s ease,border-color .45s ease !important}
+@media (prefers-reduced-motion: reduce){.theme-anim *{transition:none !important}}
 
 /* ================= LIGHT THEME (html.light) ================= */
 /* Image-led stages (hero, set-up, How it works, close) keep their full-colour imagery and white-on-image type.
@@ -572,10 +582,10 @@ html.light,html.light body{background:#f4f4f1;color:#0a0a0a}
 .light .sw-nav .sw-links a{color:#0a0a0a}
 .light .sw-nav .sw-links a:hover{color:#000}
 .light .sw-nav a:focus-visible{outline-color:#0a0a0a}
-.light .sw-theme{border-color:#0a0a0a}
+.light .sw-theme{border-color:rgba(0,0,0,.6)}
+.light .sw-theme .knob{background:#0a0a0a}
 .light .sw-theme button{color:#0a0a0a}
-.light .sw-theme button + button{border-left-color:#0a0a0a}
-.light .sw-theme button[aria-pressed="true"]{background:#0a0a0a;color:#fff}
+.light .sw-theme button[aria-pressed="true"]{color:#fff}
 .light .sw-theme button:focus-visible{outline-color:#0a0a0a}
 .light .sw-nav .sw-gs,.light .sw-mq .sw-gs,.light .sw-cmp .sw-gs,.light .sw-uc .sw-gs,.light .sw-team .sw-gs,.light .sw-faqs .sw-gs{--gs-bg:#0a0a0a;--gs-fg:#fff;--gs-bd:#0a0a0a;--gs-hbg:#fff;--gs-hfg:#0a0a0a;--gs-ring:#0a0a0a}
 .light .sw-nav .sw-line,.light .sw-cmp .sw-line{color:#0a0a0a;border-color:#0a0a0a}
@@ -641,7 +651,7 @@ html,body{overflow-x:clip}.sw-quote{overflow:hidden}
     <div class="sw-links"><a href="#how-it-works">How it works</a><a href="#use-cases">Use cases</a><a href="#faq">FAQ</a></div>
   </div>
   <div class="sw-right">
-    <div class="sw-theme" role="group" aria-label="Colour theme"><button type="button" data-theme="light" aria-pressed="false">Light</button><button type="button" data-theme="dark" aria-pressed="true">Dark</button></div>
+    <div class="sw-theme" role="group" aria-label="Colour theme"><i class="knob" aria-hidden="true"></i><button type="button" data-theme="light" aria-pressed="false" aria-label="Light mode" title="Light mode"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"><rect x="5.5" y="5.5" width="5" height="5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3"/></svg></button><button type="button" data-theme="dark" aria-pressed="true" aria-label="Dark mode" title="Dark mode"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="miter"><path d="M12.8 10.4A5.5 5.5 0 0 1 5.6 3.2a5.5 5.5 0 1 0 7.2 7.2z"/></svg></button></div>
     <!-- SWAP: real Get started URL --><a class="sw-btn sw-gs" href="#get-started">Get started</a>
     <!-- SWAP: real Try URL --><a class="sw-btn sw-line" href="#get-started" data-try>Try SkyChat</a>
   </div>
@@ -1119,7 +1129,9 @@ if (reduce.addEventListener) reduce.addEventListener("change", () => location.re
   const themeBtns = [...document.querySelectorAll(".sw-theme button")];
   const paintTheme = () => { const light = document.documentElement.classList.contains("light"); themeBtns.forEach(b => b.setAttribute("aria-pressed", String((b.dataset.theme === "light") === light))); };
   themeBtns.forEach(b => b.addEventListener("click", () => {
+    document.documentElement.classList.add("theme-anim");
     document.documentElement.classList.toggle("light", b.dataset.theme === "light");
+    clearTimeout(window.__thT); window.__thT = setTimeout(() => document.documentElement.classList.remove("theme-anim"), 600);
     try { localStorage.setItem("sw-theme", b.dataset.theme); } catch (e) {}
     paintTheme();
   }));
